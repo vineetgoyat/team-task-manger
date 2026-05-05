@@ -2,7 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
@@ -302,6 +302,9 @@ app.get("/dashboard/:projectId", auth, async (req, res) => {
 
 
 
-app.listen(3000, () => {
-  console.log("Server started on port 3000");
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
