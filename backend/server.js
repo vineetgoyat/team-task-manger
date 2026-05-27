@@ -190,7 +190,7 @@ app.post("/task", auth, async (req, res) => {
     await newTask.save();
 
     res.status(201).json({
-      message: "Task created",
+      message: "Task is created",
       task: newTask
     });
   } catch (err) {
