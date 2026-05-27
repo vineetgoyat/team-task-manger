@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Team Task Manager</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .container {
+      width: 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .task {
+      background: #eef;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+  </style>
+
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Team Task Manager</h1>
+
+  <h2>Login</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" placeholder="Password" type="password">
+  <button onclick="login()">Login</button>
+
+  <h2>Create Project</h2>
+  <input id="pname" placeholder="Project Name">
+  <input id="pdesc" placeholder="Description">
+  <button onclick="createProject()">Create Project</button>
+
+  <h2>Create Task</h2>
+  <input id="title" placeholder="Task Title">
+  <input id="desc" placeholder="Task Description">
+  <input id="projectId" placeholder="Project ID">
+  <button onclick="createTask()">Create Task</button>
+
+  <h2>View Tasks</h2>
+  <input id="viewProjectId" placeholder="Project ID">
+  <button onclick="getTasks()">Fetch Tasks</button>
+
+  <div id="tasks"></div>
+
+</div>
+
+<script>
+
+let token = "";
+
+// 🔐 LOGIN
+async function login() {
+  const res = await fetch("https://team-task-manger-production-8cad.up.railway.app/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
+
+  const data = await res.json();
+  token = data.token;
+
+  alert("Logged in!");
+}
+
+// 📁 CREATE PROJECT
+async function createProject() {
+  await fetch("https://team-task-manger-production-8cad.up.railway.app/project", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify({
+      name: document.getElementById("pname").value,
+      description: document.getElementById("pdesc").value
+    })
+  });
+
+  alert("Project created!");
+}
+
+// ✅ CREATE TASK
+async function createTask() {
+  await fetch("https://team-task-manger-production-8cad.up.railway.app/task", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify({
+      title: document.getElementById("title").value,
+      description: document.getElementById("desc").value,
+      projectId: document.getElementById("projectId").value
+    })
+  });
+
+  alert("Task created!");
+}
+
+// 📊 FETCH TASKS
+async function getTasks() {
+  const projectId = document.getElementById("viewProjectId").value;
+
+  const res = await fetch(`https://team-task-manger-production-8cad.up.railway.app/task/${projectId}`, {
+    headers: {
+      "Authorization": token
+    }
+  });
+
+  const data = await res.json();
+
+  const taskDiv = document.getElementById("tasks");
+  taskDiv.innerHTML = "";
+
+  data.tasks.forEach(task => {
+    const div = document.createElement("div");
+    div.className = "task";
+
+    div.innerHTML = `
+      <b>${task.title}</b><br>
+      ${task.description}<br>
+      Status: ${task.status}
+    `;
+
+    taskDiv.appendChild(div);
+  });
+}
+
+</script>
+
+</body>
+</html>
