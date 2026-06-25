@@ -100,6 +100,13 @@ npm install
 cd ../server
 npm install
 
+Run the Application
+# Backend
+npm run dev
+
+# Frontend
+npm start
+
 🎯 Key Highlights
 
 * Full-stack MERN architecture
