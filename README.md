@@ -91,6 +91,15 @@ Clone the Repository
 git clone <repository-url>
 cd team-task-manager
 
+Install Dependencies
+# Frontend
+cd client
+npm install
+
+# Backend
+cd ../server
+npm install
+
 🎯 Key Highlights
 
 * Full-stack MERN architecture
