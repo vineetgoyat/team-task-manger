@@ -85,6 +85,12 @@ team-task-manager/
 │
 └── README.md
 
+🚀 Getting Started
+
+Clone the Repository
+git clone <repository-url>
+cd team-task-manager
+
 🎯 Key Highlights
 
 * Full-stack MERN architecture
