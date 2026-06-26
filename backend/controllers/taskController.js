@@ -52,3 +52,16 @@ exports.deleteTask = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.addComment = async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) return res.status(404).json({ message: "Task not found" });
+    task.comments.push({ user: req.user._id, text: req.body.text });
+    await task.save();
+    await task.populate("comments.user", "name avatar");
+    res.json(task.comments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
