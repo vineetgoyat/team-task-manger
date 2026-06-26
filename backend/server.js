@@ -498,45 +498,6 @@ app.get("/task/:projectId", auth, async (req, res) => {
       project: req.params.projectId
     });
 
-    res.json({
-      message: "Tasks fetched",
-      tasks: tasks
-    });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Error fetching tasks");
-  }
-});
-
-
-
-app.put("/task/:taskId", auth, async (req, res) => {
-  const { status } = req.body;
-
-  try {
-    const task = await Task.findById(req.params.taskId);
-
-    if (!task) {
-      return res.status(404).send("Task not found");
-    }
-
-    // update status
-    task.status = status;
-
-    await task.save();
-
-    res.json({
-      message: "Task updated",
-      task: task
-    });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Error updating task");
-  }
-});
-
 
 
 
