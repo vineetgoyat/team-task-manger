@@ -65,3 +65,22 @@ exports.addComment = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.getDashboard = async (req, res) => {
+  try {
+    const filter = req.user.role === "admin" ? {} : { assignedTo: req.user._id };
+    const [total, todo, inProgress, completed] = await Promise.all([
+      Task.countDocuments(filter),
+      Task.countDocuments({ ...filter, status: "todo" }),
+      Task.countDocuments({ ...filter, status: "in-progress" }),
+      Task.countDocuments({ ...filter, status: "completed" }),
+    ]);
+    const recentTasks = await Task.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .populate("assignedTo", "name avatar");
+    res.json({ total, todo, inProgress, completed, recentTasks });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
