@@ -539,34 +539,7 @@ app.put("/task/:taskId", auth, async (req, res) => {
 
 
 
-app.get("/dashboard/:projectId", auth, async (req, res) => {
-  try {
-    const tasks = await Task.find({
-      project: req.params.projectId
-    });
 
-    const total = tasks.length;
-
-    const completed = tasks.filter(t => t.status === "done").length;
-
-    const pending = tasks.filter(t => t.status !== "done").length;
-
-    const overdue = tasks.filter(t => {
-      return t.dueDate && new Date(t.dueDate) < new Date() && t.status !== "done";
-    }).length;
-
-    res.json({
-      totalTasks: total,
-      completedTasks: completed,
-      pendingTasks: pending,
-      overdueTasks: overdue
-    });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Error fetching dashboard");
-  }
-});
 
 
 
