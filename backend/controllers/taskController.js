@@ -19,3 +19,13 @@ exports.getTasks = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.createTask = async (req, res) => {
+  try {
+    const task = await Task.create({ ...req.body, createdBy: req.user._id });
+    await task.populate("assignedTo", "name email avatar");
+    res.status(201).json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
