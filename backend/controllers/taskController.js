@@ -29,3 +29,16 @@ exports.createTask = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+exports.updateTask = async (req, res) => {
+  try {
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    }).populate("assignedTo", "name email avatar");
+    if (!task) return res.status(404).json({ message: "Task not found" });
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
