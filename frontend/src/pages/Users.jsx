@@ -8,3 +8,11 @@ export default function Users() {
   useEffect(() => {
     api.get("/users").then(r => setUsers(r.data)).catch(() => toast.error("Failed to load users"));
   }, []);
+
+  const toggleStatus = async (id) => {
+    try {
+      await api.patch(`/users/${id}/toggle`);
+      setUsers(users.map(u => u._id === id ? { ...u, isActive: !u.isActive } : u));
+      toast.success("User status updated!");
+    } catch { toast.error("Failed to update"); }
+  };
